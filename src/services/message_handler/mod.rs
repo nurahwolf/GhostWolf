@@ -21,7 +21,7 @@ const DEFAULT_CHARACTER_LIMIT: usize = 16;
 use crate::{
     core::{
         BOOP_COUNTER, CTX, EMOJI_BRAINDAMAGE, EMOJI_PLEADING, GUILD_COZY, USER_CASEY, USER_FEROS,
-        USER_NIVA, USER_TWEEZERS, USER_XENO, USER_YASHA,
+        USER_LISU, USER_NIVA, USER_TWEEZERS, USER_XENO, USER_YASHA,
     },
     services::interaction_handler::twee::TWEE_NICKNAMES,
 };
@@ -53,6 +53,10 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
     }
 
     let slice = msg.content.as_str();
+
+    if (msg.content.contains("dom") || msg.content.contains("top")) && msg.author.id == USER_LISU {
+        send_reaction(&msg, EMOJI_PLEADING).await?;
+    }
 
     if msg.content.len() <= character_limit || slice.split_whitespace().count() <= word_limit {
         if SUBS.contains(&msg.author.id) {
