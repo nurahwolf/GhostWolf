@@ -1,10 +1,16 @@
-use std::sync::atomic::Ordering;
+use std::{
+    sync::{LazyLock, Mutex, atomic::Ordering},
+    time::{Duration, Instant},
+};
 
 use twilight_http::request::channel::reaction::RequestReactionType;
 use twilight_model::{
     gateway::payload::incoming::MessageCreate,
     id::{Id, marker::UserMarker},
 };
+
+/// To avoid Discord rate limits, we are going to prevent username changes within 20 seconds.
+static LAST_TWEE_RENAME: LazyLock<Mutex<Instant>> = LazyLock::new(|| Mutex::new(Instant::now()));
 
 const TARGETS: [Id<UserMarker>; 5] = [
     USER_XENO,
@@ -77,14 +83,26 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
     if let Some(guild_id) = msg.guild_id
         && guild_id == GUILD_COZY
     {
-        let name = fastrand::choice(TWEE_NICKNAMES).unwrap_or(TWEE_NICKNAMES[0]);
+        let should_rename = {
+            let mut last_rename = LAST_TWEE_RENAME.lock().unwrap();
+            if last_rename.elapsed() >= Duration::from_secs(20) {
+                *last_rename = Instant::now();
+                true
+            } else {
+                false
+            }
+        };
 
-        CTX.http
-            .update_guild_member(GUILD_COZY, USER_TWEEZERS)
-            .nick(name.into())
-            .await?
-            .model()
-            .await?;
+        if should_rename {
+            let name = fastrand::choice(TWEE_NICKNAMES).unwrap_or(TWEE_NICKNAMES[0]);
+
+            CTX.http
+                .update_guild_member(GUILD_COZY, USER_TWEEZERS)
+                .nick(name.into())
+                .await?
+                .model()
+                .await?;
+        }
     }
 
     // if content_lower.contains("yiff") || content_lower.contains("http") {
