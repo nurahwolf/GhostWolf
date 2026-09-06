@@ -48,7 +48,9 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
 
     // If Twee sends a short message, brain damage react it
     if msg.author.id == USER_TWEEZERS {
-        if msg.content.len() <= 8 {
+        let slice = msg.content.as_str();
+
+        if msg.content.len() <= 8 || slice.split_whitespace().count() <= 2 {
             send_reaction(&msg, EMOJI_BRAINDAMAGE).await?;
         }
 
