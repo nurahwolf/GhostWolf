@@ -55,7 +55,7 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
 
     let slice = msg.content.as_str();
 
-    if FAKE_TOP.iter().any(|&word| msg.content.contains(word)) && msg.author.id == USER_LISU {
+    if FAKE_TOP.iter().any(|&word| content_lower.contains(word)) && msg.author.id == USER_LISU {
         send_reaction(&msg, EMOJI_PLEADING).await?;
     }
 
