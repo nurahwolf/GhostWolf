@@ -17,6 +17,7 @@ const TARGETS: [Id<UserMarker>; 5] = [
 const SUBS: [Id<UserMarker>; 1] = [USER_YASHA];
 const DEFAULT_WORD_LIMIT: usize = 2;
 const DEFAULT_CHARACTER_LIMIT: usize = 16;
+const FAKE_TOP: [&str; 3] = ["pussy", "dom", "top"];
 
 use crate::{
     core::{
@@ -54,7 +55,7 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
 
     let slice = msg.content.as_str();
 
-    if (msg.content.contains("dom") || msg.content.contains("top")) && msg.author.id == USER_LISU {
+    if FAKE_TOP.iter().any(|&word| msg.content.contains(word)) && msg.author.id == USER_LISU {
         send_reaction(&msg, EMOJI_PLEADING).await?;
     }
 
