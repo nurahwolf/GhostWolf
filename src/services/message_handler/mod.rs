@@ -15,17 +15,31 @@ const TARGETS: [Id<UserMarker>; 5] = [
 ];
 
 const SUBS: [Id<UserMarker>; 1] = [USER_YASHA];
+const DEFAULT_WORD_LIMIT: usize = 2;
+const DEFAULT_CHARACTER_LIMIT: usize = 16;
 
 use crate::{
     core::{
-        BOOP_COUNTER, CTX, EMOJI_BRAINDAMAGE, EMOJI_PLEADING, GUILD_COZY, USER_FEROS, USER_NIVA,
-        USER_TWEEZERS, USER_XENO, USER_YASHA,
+        BOOP_COUNTER, CTX, EMOJI_BRAINDAMAGE, EMOJI_PLEADING, GUILD_COZY, USER_CASEY, USER_FEROS,
+        USER_NIVA, USER_TWEEZERS, USER_XENO, USER_YASHA,
     },
     services::interaction_handler::twee::TWEE_NICKNAMES,
 };
 
 pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
     tracing::info!("{}: {}", msg.author.name, msg.content);
+
+    let (word_limit, character_limit) = if msg.guild_id.is_some_and(|x| x == GUILD_COZY) {
+        let word_limit = vec![1, 2, 3, 4, 5, 6];
+        let character_limit = vec![4, 6, 8, 12, 16, 32];
+
+        (
+            fastrand::usize(..word_limit.len()),
+            fastrand::usize(..character_limit.len()),
+        )
+    } else {
+        (DEFAULT_WORD_LIMIT, DEFAULT_CHARACTER_LIMIT)
+    };
 
     let content_lower = msg.content.to_lowercase();
 
@@ -38,35 +52,34 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
             .await?;
     }
 
-    if SUBS.contains(&msg.author.id) && msg.content.len() <= 16 {
-        send_reaction(&msg, EMOJI_PLEADING).await?;
-    }
+    let slice = msg.content.as_str();
 
-    if TARGETS.contains(&msg.author.id) && msg.content.len() <= 16 {
-        send_reaction(&msg, EMOJI_BRAINDAMAGE).await?;
-    }
+    if msg.content.len() <= character_limit || slice.split_whitespace().count() <= word_limit {
+        if SUBS.contains(&msg.author.id) {
+            send_reaction(&msg, EMOJI_PLEADING).await?;
+        }
 
-    // If Twee sends a short message, brain damage react it
-    if msg.author.id == USER_TWEEZERS {
-        let slice = msg.content.as_str();
-
-        if msg.content.len() <= 8 || slice.split_whitespace().count() <= 2 {
+        if TARGETS.contains(&msg.author.id) {
             send_reaction(&msg, EMOJI_BRAINDAMAGE).await?;
         }
 
-        // Also update her nickname whenever she posts in my server
-        if let Some(guild_id) = msg.guild_id
-            && guild_id == GUILD_COZY
-        {
-            let name = fastrand::choice(TWEE_NICKNAMES).unwrap_or(TWEE_NICKNAMES[0]);
-
-            CTX.http
-                .update_guild_member(GUILD_COZY, USER_TWEEZERS)
-                .nick(name.into())
-                .await?
-                .model()
-                .await?;
+        if msg.author.id == USER_TWEEZERS || msg.author.id == USER_CASEY {
+            send_reaction(&msg, EMOJI_BRAINDAMAGE).await?;
         }
+    }
+
+    // Also update her nickname whenever she posts in my server
+    if let Some(guild_id) = msg.guild_id
+        && guild_id == GUILD_COZY
+    {
+        let name = fastrand::choice(TWEE_NICKNAMES).unwrap_or(TWEE_NICKNAMES[0]);
+
+        CTX.http
+            .update_guild_member(GUILD_COZY, USER_TWEEZERS)
+            .nick(name.into())
+            .await?
+            .model()
+            .await?;
     }
 
     // if content_lower.contains("yiff") || content_lower.contains("http") {
