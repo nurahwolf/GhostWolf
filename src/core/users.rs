@@ -7,3 +7,5 @@ pub const USER_XENO: Id<UserMarker> = Id::new(392992034304294924);
 pub const USER_YASHA: Id<UserMarker> = Id::new(173874821032050688);
 pub const USER_CASEY: Id<UserMarker> = Id::new(152571631376662528);
 pub const USER_LISU: Id<UserMarker> = Id::new(1416146148980166736);
+pub const USER_STUPIDTOASTER: Id<UserMarker> = Id::new(1283928196609474560);
+pub const USER_ZEROLUX: Id<UserMarker> = Id::new(349235480987959308);

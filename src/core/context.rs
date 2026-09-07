@@ -7,7 +7,6 @@ use twilight_model::id::{Id, marker::ApplicationMarker};
 /// The main 'context', or runtime storage, for the bot.
 pub static CTX: Ref = Ref(std::sync::OnceLock::new());
 
-#[derive(Debug)]
 pub struct Context {
     pub application_id: Id<ApplicationMarker>,
     pub http: Client,

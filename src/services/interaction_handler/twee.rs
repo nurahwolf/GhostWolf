@@ -11,7 +11,7 @@ use twilight_util::builder::command::CommandBuilder;
 use crate::core::{CTX, GUILD_COZY, USER_TWEEZERS};
 
 pub const NAME: &str = "twee";
-pub const TWEE_NICKNAMES: [&str; 17] = [
+pub const TWEE_NICKNAMES: [&str; 21] = [
     "3'7 Dildo",
     "Biting Slut",
     "FUCK ME, KNOT ME, BREED ME",
@@ -29,6 +29,10 @@ pub const TWEE_NICKNAMES: [&str; 17] = [
     "Smittens",
     "Smol and FUCKABLE",
     "Tiny Tits",
+    "Fox Knot Socket",
+    "Knot Socket",
+    "Werewolf Knot Socket",
+    "Mooda's Knot Socket",
 ];
 
 pub fn command() -> Command {

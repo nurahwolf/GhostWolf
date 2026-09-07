@@ -1,5 +1,7 @@
+mod add_nickname;
 pub mod interaction_handler;
 pub mod message_handler;
+pub mod ping;
 pub mod ready_handler;
 
 use crate::{
@@ -10,6 +12,8 @@ use std::{error::Error, pin::pin};
 use tokio::{signal, sync::watch};
 use tokio_util::task::TaskTracker;
 use twilight_gateway::{CloseFrame, ConfigBuilder, Event, Shard, ShardId, StreamExt as _};
+
+pub use ping::*;
 
 #[derive(Clone, Copy, Debug)]
 pub enum ShardRestartResult {
