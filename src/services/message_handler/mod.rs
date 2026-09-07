@@ -82,6 +82,7 @@ pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
 
     if let Some(guild_id) = msg.guild_id
         && guild_id == GUILD_COZY
+        && msg.author.id == USER_TWEEZERS
     {
         let should_rename = {
             let mut last_rename = LAST_TWEE_RENAME.lock().unwrap();
