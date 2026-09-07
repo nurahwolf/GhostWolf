@@ -8,7 +8,10 @@ use twilight_http::{
 };
 use twilight_model::{
     gateway::payload::incoming::MessageCreate,
-    id::{Id, marker::UserMarker},
+    id::{
+        Id,
+        marker::{ChannelMarker, UserMarker},
+    },
 };
 
 /// To avoid Discord rate limits, we are going to prevent username changes within 20 seconds.
@@ -29,6 +32,10 @@ const DEFAULT_WORD_LIMIT: usize = 2;
 const DEFAULT_CHARACTER_LIMIT: usize = 16;
 const FAKE_TOP: [&str; 3] = ["pussy", "dom", "top"];
 
+pub const CHANNEL_WORK: Id<ChannelMarker> = Id::new(1534287648955306024);
+pub const CHANNEL_VENT: Id<ChannelMarker> = Id::new(1139232506990833725);
+pub const CHANNEL_POL: Id<ChannelMarker> = Id::new(1260223411024560218);
+
 use crate::{
     core::{
         BOOP_COUNTER, CTX, EMOJI_BRAINDAMAGE, EMOJI_PLEADING, GUILD_COZY, USER_CASEY, USER_FEROS,
@@ -40,6 +47,13 @@ use crate::{
 
 pub async fn message_handler(msg: Box<MessageCreate>) -> anyhow::Result<()> {
     tracing::info!("{}: {}", msg.author.name, msg.content);
+
+    if msg.channel_id == CHANNEL_WORK
+        || msg.channel_id == CHANNEL_VENT
+        || msg.channel_id == CHANNEL_POL
+    {
+        return Ok(());
+    }
 
     let (word_limit, character_limit) = if msg.guild_id.is_some_and(|x| x == GUILD_COZY) {
         let word_limit = vec![1, 2, 3, 4, 5, 6];
