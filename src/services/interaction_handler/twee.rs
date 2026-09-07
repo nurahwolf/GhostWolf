@@ -11,28 +11,37 @@ use twilight_util::builder::command::CommandBuilder;
 use crate::core::{CTX, GUILD_COZY, USER_TWEEZERS};
 
 pub const NAME: &str = "twee";
-pub const TWEE_NICKNAMES: [&str; 21] = [
+pub const TWEE_NICKNAMES: [&str; 30] = [
     "3'7 Dildo",
     "Biting Slut",
+    "Cat Without the Cream",
+    "Fox Knot Socket",
     "FUCK ME, KNOT ME, BREED ME",
+    "Fun Sized",
     "I cum if bullied",
     "I just wanna cum!!!",
     "I topped a feather",
     "I'm horny (and tiny).",
     "Itty Bitty Kitty Titties",
+    "Knot Socket",
+    "Mooda's Knot Socket",
     "My Pussy Is For Breeding",
+    "Needs Cream Filling",
+    "Needs Tweezers to Grab",
     "Non-Con is hot",
     "Please Abuse My Tiny Body",
     "Please Cum Inside Me",
+    "Pocket Pussy",
+    "Portable Pillow",
+    "Purrfectly Puny",
     "S'mitties",
     "Short Snacc",
     "Smittens",
     "Smol and FUCKABLE",
     "Tiny Tits",
-    "Fox Knot Socket",
-    "Knot Socket",
+    "Vore Me",
     "Werewolf Knot Socket",
-    "Mooda's Knot Socket",
+    "Winston's Cuddle Buddy",
 ];
 
 pub fn command() -> Command {
